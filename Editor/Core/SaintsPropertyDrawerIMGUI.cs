@@ -104,22 +104,21 @@ namespace SaintsField.Editor.Core
 
         #endregion
 
-        private bool GetVisibility(SerializedProperty property, IEnumerable<SaintsWithIndex> saintsAttributeWithIndexes,
-            object parent)
-        {
-            List<bool> showAndResults = new List<bool>();
-            foreach (SaintsWithIndex saintsAttributeWithIndex in saintsAttributeWithIndexes)
-            {
-                if (saintsAttributeWithIndex.SaintsAttribute is ShowIfAttribute showIfAttribute)
-                {
-                    SaintsPropertyDrawer drawer = GetOrCreateSaintsDrawer(saintsAttributeWithIndex);
-                    showAndResults.Add(drawer.GetThisDecoratorVisibility(showIfAttribute, property, fieldInfo, parent));
-                }
-            }
-            // Debug.Log($"visibility={string.Join(", ", showAndResults)}");
+        private bool GetVisibility(SerializedProperty property, SaintsWithIndex[] saintsAttributeWithIndexes,
+             object parent)
+         {
+             foreach (SaintsWithIndex saintsAttributeWithIndex in saintsAttributeWithIndexes)
+             {
+                 if (!(saintsAttributeWithIndex.SaintsAttribute is ShowIfAttribute showIfAttribute))
+                     continue;
 
-            return showAndResults.Count == 0 || showAndResults.Any(each => each);
-        }
+                 SaintsPropertyDrawer drawer = GetOrCreateSaintsDrawer(saintsAttributeWithIndex);
+                 if (!drawer.GetThisDecoratorVisibility(showIfAttribute, property, fieldInfo, parent))
+                     return false;
+             }
+
+             return true;
+         }
 
         #region IMGUI Drawer
 
@@ -135,24 +134,23 @@ namespace SaintsField.Editor.Core
             // }
             // Debug.Log($"GetPropertyHeight/{this}");
 
-            if (SubDrawCounter.TryGetValue(InsideSaintsFieldScoop.MakeKey(property), out int insideDrawCount) &&
-                insideDrawCount > 0)
+            var propertyKey = InsideSaintsFieldScoop.MakeKey(property);
+
+            if (SubDrawCounter.TryGetValue(propertyKey, out int insideDrawCount) && insideDrawCount > 0)
             {
                 // Debug.Log($"Sub Draw GetPropertyHeight/{this}");
                 // return EditorGUI.GetPropertyHeight(property, GUIContent.none, true);
                 return GetPropertyHeightFallback(property, label, fieldInfo);
             }
 
-            if (SubGetHeightCounter.TryGetValue(InsideSaintsFieldScoop.MakeKey(property),
-                    out int insideGetHeightCount) && insideGetHeightCount > 0)
+            if (SubGetHeightCounter.TryGetValue(propertyKey, out int insideGetHeightCount) && insideGetHeightCount > 0)
             {
                 // Debug.Log($"Sub GetHeight GetPropertyHeight/{this}");
                 // return EditorGUI.GetPropertyHeight(property, GUIContent.none, true);
                 return GetPropertyHeightFallback(property, label, fieldInfo);
             }
 
-            (PropertyAttribute[] allAttributes, object parent) =
-                SerializedUtils.GetAttributesAndDirectParent<PropertyAttribute>(property);
+            (ISaintsAttribute[] allAttributes, object parent) = SerializedUtils.GetAttributesAndDirectParent<ISaintsAttribute>(property);
 
             if (parent == null)
             {
@@ -160,152 +158,75 @@ namespace SaintsField.Editor.Core
                 return 0;
             }
 
-            // (ISaintsAttribute[] attributes, object parent) = SerializedUtils.GetAttributesAndDirectParent<ISaintsAttribute>(property);
-            List<SaintsWithIndex> saintsAttributeWithIndexes = allAttributes
-                .OfType<ISaintsAttribute>()
-                // .Where(each => !(each is VisibilityAttribute))
-                .Select((each, index) => new SaintsWithIndex(each, index))
-                .ToList();
-
-            Dictionary<SaintsWithIndex, SaintsPropertyDrawer> usedAttributes = saintsAttributeWithIndexes
-                .ToDictionary(each => each, GetOrCreateSaintsDrawer);
-
-            (ISaintsAttribute iSaintsAttribute, SaintsPropertyDrawer drawer)[] filedOrLabel = usedAttributes
-                .Where(each =>
-                    each.Key.SaintsAttribute.AttributeType == SaintsAttributeType.Field
-                    // ReSharper disable once MergeIntoLogicalPattern
-                    || each.Key.SaintsAttribute.AttributeType == SaintsAttributeType.Label)
-                .Select(each => (IsaintsAttribute: each.Key.SaintsAttribute, each.Value))
-                .ToArray();
-
-            (ISaintsAttribute iSaintsAttribute, SaintsPropertyDrawer drawer) fieldFound =
-                filedOrLabel.FirstOrDefault(each => each.iSaintsAttribute.AttributeType == SaintsAttributeType.Field);
-
-
-            if (UseCreateFieldIMGUI && fieldFound.iSaintsAttribute is null)
+            SaintsWithIndex[] saintsAttributeWithIndexes = new SaintsWithIndex[allAttributes.Length];
+            for (int i = 0; i < allAttributes.Length; i++)
             {
-                SaintsWithIndex thisFake = new SaintsWithIndex(null, -1);
-                saintsAttributeWithIndexes.Insert(0, thisFake);
-                usedAttributes[thisFake] = this;
+                saintsAttributeWithIndexes[i] = new SaintsWithIndex(allAttributes[i], i);
             }
 
-            if (!GetVisibility(
-                    property,
-                    saintsAttributeWithIndexes,
-                    parent
-                ))
+            if (!GetVisibility(property, saintsAttributeWithIndexes, parent))
             {
-                // Debug.Log($"height 0");
                 return 0f;
             }
-            // Debug.Log("height continue");
 
-            // if (_usedAttributes.Count == 0)
-            // {
-            //     foreach ((SaintsWithIndex each, SaintsPropertyDrawer drawer) in attributes
-            //                  .Select((each, index) => new SaintsWithIndex
-            //                  {
-            //                      SaintsAttribute = each,
-            //                      Index = index,
-            //                  })
-            //                  .Where(each => !(each.SaintsAttribute is VisibilityAttribute))
-            //                  .Select(each => (each, GetOrCreateSaintsDrawer(each))))
-            //     {
-            //         _usedAttributes[each] = drawer;
-            //     }
-            // }
+            (ISaintsAttribute iSaintsAttribute, SaintsPropertyDrawer drawer)? fieldFound = null;
+            (ISaintsAttribute iSaintsAttribute, SaintsPropertyDrawer drawer)? labelFound = null;
 
-            // float defaultHeight = base.GetPropertyHeight(property, label);
+            (SaintsWithIndex attrWithIdx, SaintsPropertyDrawer drawer)[] usedAttributes = new (SaintsWithIndex, SaintsPropertyDrawer)[saintsAttributeWithIndexes.Length];
+            for (var i = 0; i < saintsAttributeWithIndexes.Length; i++)
+            {
+                var attrWithIdx = saintsAttributeWithIndexes[i];
+                var drawer = GetOrCreateSaintsDrawer(attrWithIdx);
+                usedAttributes[i] = (attrWithIdx, drawer);
+                if (fieldFound == null && attrWithIdx.SaintsAttribute.AttributeType == SaintsAttributeType.Field)
+                    fieldFound = (attrWithIdx.SaintsAttribute, drawer);
+                else if (labelFound == null && attrWithIdx.SaintsAttribute.AttributeType == SaintsAttributeType.Label)
+                    labelFound = (attrWithIdx.SaintsAttribute, drawer);
+            }
 
-
-            // foreach ((ISaintsAttribute iSaintsAttribute, SaintsPropertyDrawer drawer) in filedOrLabel)
-            // {
-            //     Debug.Log($"GetHeight found {iSaintsAttribute} {iSaintsAttribute.AttributeType} {drawer}");
-            // }
-
-            // SaintsPropertyDrawer[] usedDrawerInfos = _usedDrawerTypes.Select(each => _cachedDrawer[each]).ToArray();
-            // SaintsPropertyDrawer[] fieldInfos = usedDrawerInfos.Where(each => each.AttributeType is SaintsAttributeType.Field or SaintsAttributeType.Label).ToArray();
-
-            (ISaintsAttribute iSaintsAttribute, SaintsPropertyDrawer drawer) labelFound =
-                filedOrLabel.FirstOrDefault(each => each.iSaintsAttribute?.AttributeType == SaintsAttributeType.Label);
-
-            // Debug.Log($"labelFound.iSaintsAttribute={labelFound.iSaintsAttribute}");
-            bool hasSaintsLabel = labelFound.iSaintsAttribute != null;
-            // Debug.Log($"hasSaintsLabel={hasSaintsLabel}");
-
-            SaintsPropertyDrawer labelDrawer = labelFound.drawer;
-
-            bool saintsDrawNoLabel = hasSaintsLabel &&
-                                     !labelDrawer.WillDrawLabel(property, labelFound.iSaintsAttribute, fieldInfo,
-                                         parent);
-
-            bool hasSaintsField = fieldFound.iSaintsAttribute != null || UseCreateFieldIMGUI;
-
+            bool saintsDrawNoLabel = labelFound?.drawer.WillDrawLabel(property, labelFound.Value.iSaintsAttribute, fieldInfo, parent) != true;
             bool disabledLabelField = label.text == "" || saintsDrawNoLabel;
-            // Debug.Log(disabledLabelField);
 
             float fullWidth = _filedWidthCache - 1 <= Mathf.Epsilon
                 ? EditorGUIUtility.currentViewWidth - EditorGUI.indentLevel * 15
                 : _filedWidthCache;
 
+            var fieldBasicHeight = fieldFound?.iSaintsAttribute != null || UseCreateFieldIMGUI
+                ? (fieldFound?.drawer ?? this).GetFieldHeight(property, label, fullWidth, fieldFound?.iSaintsAttribute, fieldInfo, !disabledLabelField, parent)
+                : GetPropertyHeightFallback(property, label, fieldInfo);
+
             float labelBasicHeight = saintsDrawNoLabel ? 0f : EditorGUIUtility.singleLineHeight;
-            float fieldBasicHeight;
-            if (hasSaintsField)
-            {
-                SaintsPropertyDrawer drawer = fieldFound.drawer ?? this;
-                fieldBasicHeight = drawer.GetFieldHeight(property, label, fullWidth, fieldFound.iSaintsAttribute,
-                    fieldInfo,
-                    !disabledLabelField, parent);
-            }
-            else
-            {
-                fieldBasicHeight = GetPropertyHeightFallback(property, label, fieldInfo);
-            }
-
-            // Debug.Log($"hasSaintsField={hasSaintsField}, labelBasicHeight={labelBasicHeight}, fieldBasicHeight={fieldBasicHeight}");
             _labelFieldBasicHeight = Mathf.Max(labelBasicHeight, fieldBasicHeight);
-
-            float aboveHeight = 0;
-            float belowHeight = 0;
-
 
             // Nah, Unity will give `EditorGUIUtility.currentViewWidth=0` on first render...
             // Let Drawer decide what to do then...
             // float fullWidth = 100;
             // Debug.Log($"fullWidth={fullWidth}, _filedWidthCache={_filedWidthCache}; EditorGUIUtility.currentViewWidth={EditorGUIUtility.currentViewWidth}, EditorGUI.indentLevel={EditorGUI.indentLevel}");
 
-            // Debug.Log(usedAttributes.Count);
+            float aboveHeight = 0;
+            float belowHeight = 0;
 
-            foreach (IGrouping<string, KeyValuePair<SaintsWithIndex, SaintsPropertyDrawer>> grouped in
-                     usedAttributes.ToLookup(each => each.Key.SaintsAttribute?.GroupBy ?? ""))
+            float eachWidth = fullWidth / usedAttributes.Length;
+
+            float aboveMod = 0;
+            foreach (var (attrWithIdx, drawer) in usedAttributes)
             {
-                float eachWidth = grouped.Key == ""
-                    ? fullWidth
-                    : fullWidth / grouped.Count();
-
-                IEnumerable<float> aboveHeights = grouped
-                    .Select(each => each.Value.GetAboveExtraHeight(property, label, eachWidth, each.Key.SaintsAttribute,
-                        each.Key.Index, fieldInfo, parent))
-                    .Where(each => each > 0)
-                    .DefaultIfEmpty(0);
-                IEnumerable<float> belowHeights = grouped
-                    .Select(each => each.Value.GetBelowExtraHeight(property, label, eachWidth, each.Key.SaintsAttribute,
-                        each.Key.Index, fieldInfo, parent))
-                    .Where(each => each > 0)
-                    .DefaultIfEmpty(0);
-
-                if (grouped.Key == "")
-                {
-                    aboveHeight += aboveHeights.Sum();
-                    belowHeight += belowHeights.Sum();
-                }
-                else
-                {
-                    aboveHeight += aboveHeights.Max();
-                    belowHeight += belowHeights.Max();
-                }
-                // Debug.Log($"belowHeight={belowHeight}");
+                var aboveExtraHeight = drawer.GetAboveExtraHeight(property, label, eachWidth, attrWithIdx.SaintsAttribute, attrWithIdx.Index, fieldInfo, parent);
+                if (aboveExtraHeight <= 0) continue;
+                aboveMod = Mathf.Max(aboveMod, aboveExtraHeight);
             }
+            aboveHeight += aboveMod;
+
+            float belowMod = 0;
+            foreach (var (attrWithIdx, drawer) in usedAttributes)
+            {
+                var belowExtraHeight = drawer.GetBelowExtraHeight(property, label, eachWidth, attrWithIdx.SaintsAttribute, attrWithIdx.Index, fieldInfo, parent);
+                if (belowExtraHeight <= 0) continue;
+                belowMod = Mathf.Max(belowMod, belowExtraHeight);
+            }
+            belowHeight += belowMod;
+
+            // Debug.Log($"belowHeight={belowHeight}");
 
             // Debug.Log($"aboveHeight={aboveHeight}");
 
