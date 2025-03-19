@@ -331,11 +331,7 @@ namespace SaintsField.Editor.Core
                 return;
             }
 
-            OnGUIPayload onGUIPayload = new OnGUIPayload();
-
-            (PropertyAttribute[] allAttributes, object parent) =
-                SerializedUtils.GetAttributesAndDirectParent<PropertyAttribute>(property);
-            ISaintsAttribute[] iSaintsAttributes = allAttributes.OfType<ISaintsAttribute>().ToArray();
+            (ISaintsAttribute[] allAttributes, object parent) = SerializedUtils.GetAttributesAndDirectParent<ISaintsAttribute>(property);
 
             if (parent == null)
             {
@@ -343,20 +339,29 @@ namespace SaintsField.Editor.Core
                 return;
             }
 
-            List<SaintsWithIndex> allSaintsAttributes = iSaintsAttributes
-                .Select((each, index) => new SaintsWithIndex(each, index))
-                .ToList();
+            SaintsWithIndex? fieldAttributeWithIndex = null;
+            SaintsWithIndex? labelAttributeWithIndex = null;
+            SaintsWithIndex[] attributesWithIndex = new SaintsWithIndex[allAttributes.Length];
 
-            SaintsWithIndex fieldAttributeWithIndex =
-                allSaintsAttributes.FirstOrDefault(each =>
-                    each.SaintsAttribute.AttributeType == SaintsAttributeType.Field);
+            for (int i = 0; i < allAttributes.Length; i++)
+            {
+                var attr = allAttributes[i];
+                var attrWithIdx = new SaintsWithIndex(attr, i);
+                attributesWithIndex[i] = attrWithIdx;
+                if (fieldAttributeWithIndex == null && attr.AttributeType == SaintsAttributeType.Field)
+                    fieldAttributeWithIndex = attrWithIdx;
+                else if (labelAttributeWithIndex == null && attr.AttributeType == SaintsAttributeType.Label)
+                    labelAttributeWithIndex = attrWithIdx;
+            }
 
-            bool useCreateFieldIMGUI = fieldAttributeWithIndex.SaintsAttribute is null && UseCreateFieldIMGUI;
+            if (!GetVisibility(property, attributesWithIndex, parent))
+            {
+                return;
+            }
 
-            if (useCreateFieldIMGUI)
+            if (fieldAttributeWithIndex?.SaintsAttribute is null && UseCreateFieldIMGUI)
             {
                 fieldAttributeWithIndex = new SaintsWithIndex(null, -1);
-                allSaintsAttributes.Insert(0, fieldAttributeWithIndex);
             }
 
             // foreach (SaintsWithIndex saintsWithIndex in allSaintsAttributes)
@@ -366,17 +371,9 @@ namespace SaintsField.Editor.Core
 
             // Debug.Log($"Saints: {property.displayName} found {allSaintsAttributes.Count}");
 
-            if (!GetVisibility(property, allSaintsAttributes.Where(each => each.SaintsAttribute is ShowIfAttribute),
-                    parent))
-            {
-                return;
-            }
-
-            SaintsWithIndex labelAttributeWithIndex =
-                allSaintsAttributes.FirstOrDefault(each =>
-                    each.SaintsAttribute?.AttributeType == SaintsAttributeType.Label);
-
             // _usedAttributes.Clear();
+
+            OnGUIPayload onGUIPayload = new OnGUIPayload();
 
             using (new EditorGUI.PropertyScope(position, label, property))
             {
@@ -393,7 +390,7 @@ namespace SaintsField.Editor.Core
                 Dictionary<string, List<(SaintsPropertyDrawer drawer, ISaintsAttribute iAttribute)>>
                     groupedAboveDrawers =
                         new Dictionary<string, List<(SaintsPropertyDrawer drawer, ISaintsAttribute iAttribute)>>();
-                foreach (SaintsWithIndex eachAttributeWithIndex in allSaintsAttributes)
+                foreach (SaintsWithIndex eachAttributeWithIndex in attributesWithIndex)
                 {
                     SaintsPropertyDrawer drawerInstance = eachAttributeWithIndex.SaintsAttribute is null
                         ? this
@@ -406,7 +403,7 @@ namespace SaintsField.Editor.Core
                         if (!groupedAboveDrawers.TryGetValue(eachAttributeWithIndex.SaintsAttribute.GroupBy,
                                 out List<(SaintsPropertyDrawer drawer, ISaintsAttribute iAttribute)> currentGroup))
                         {
-                            currentGroup = new List<(SaintsPropertyDrawer drawer, ISaintsAttribute iAttribute)>();
+                            currentGroup = new List<(SaintsPropertyDrawer drawer, ISaintsAttribute iAttribute)>(1);
                             groupedAboveDrawers[eachAttributeWithIndex.SaintsAttribute.GroupBy] = currentGroup;
                         }
 
@@ -501,7 +498,7 @@ namespace SaintsField.Editor.Core
 
                 float preLabelWidth = 0;
 
-                foreach (SaintsWithIndex eachAttributeWithIndex in allSaintsAttributes)
+                foreach (SaintsWithIndex eachAttributeWithIndex in attributesWithIndex)
                 {
                     // Debug.Log($"{eachAttributeWithIndex.Index}/{eachAttributeWithIndex.SaintsAttribute}");
                     SaintsPropertyDrawer drawerInstance = eachAttributeWithIndex.SaintsAttribute is null
@@ -541,7 +538,7 @@ namespace SaintsField.Editor.Core
 #endif
                     // hasLabelSpace = false;
                 }
-                else if (labelAttributeWithIndex.SaintsAttribute == null) // has label, no saints label drawer
+                else if (labelAttributeWithIndex?.SaintsAttribute == null) // has label, no saints label drawer
                 {
                     // needFallbackLabel = false;
                     useGuiContent = new GUIContent(label);
@@ -551,17 +548,17 @@ namespace SaintsField.Editor.Core
                 }
                 else
                 {
-                    SaintsPropertyDrawer labelDrawerInstance = GetOrCreateSaintsDrawer(labelAttributeWithIndex);
+                    SaintsPropertyDrawer labelDrawerInstance = GetOrCreateSaintsDrawer(labelAttributeWithIndex.Value);
                     // UsedAttributesTryAdd(labelAttributeWithIndex, labelDrawerInstance);
                     // completelyDisableLabel = labelDrawerInstance.WillDrawLabel(property, label, labelAttributeWithIndex.SaintsAttribute);
                     bool hasLabelSpace =
-                        labelDrawerInstance.WillDrawLabel(property, labelAttributeWithIndex.SaintsAttribute, fieldInfo,
+                        labelDrawerInstance.WillDrawLabel(property, labelAttributeWithIndex?.SaintsAttribute, fieldInfo,
                             parent);
                     if (hasLabelSpace)
                     {
                         bool hasLeftToggle = false;
                         bool hasTextArea = false;
-                        foreach (SaintsWithIndex saintsWithIndex in allSaintsAttributes)
+                        foreach (SaintsWithIndex saintsWithIndex in attributesWithIndex)
                         {
                             if (saintsWithIndex.SaintsAttribute is LeftToggleAttribute)
                             {
@@ -626,7 +623,7 @@ namespace SaintsField.Editor.Core
                 List<(SaintsWithIndex attributeWithIndex, SaintsPropertyDrawer drawer, float width)> postFieldInfoList =
                     new List<(SaintsWithIndex attributeWithIndex, SaintsPropertyDrawer drawer, float width)>();
                 // ReSharper disable once LoopCanBeConvertedToQuery
-                foreach (SaintsWithIndex eachAttributeWithIndex in allSaintsAttributes)
+                foreach (SaintsWithIndex eachAttributeWithIndex in attributesWithIndex)
                 {
                     SaintsPropertyDrawer drawerInstance = eachAttributeWithIndex.SaintsAttribute is null
                         ? this
@@ -650,9 +647,9 @@ namespace SaintsField.Editor.Core
 
                 #region field
 
-                Type fieldDrawer = fieldAttributeWithIndex.SaintsAttribute == null
+                Type fieldDrawer = fieldAttributeWithIndex?.SaintsAttribute == null
                     ? null
-                    : GetFirstSaintsDrawerType(fieldAttributeWithIndex.SaintsAttribute.GetType());
+                    : GetFirstSaintsDrawerType(fieldAttributeWithIndex?.SaintsAttribute.GetType());
 
                 using (new AdaptLabelWidth())
                 using (new ResetIndentScoop())
@@ -670,11 +667,11 @@ namespace SaintsField.Editor.Core
                     else
                     {
                         // Debug.Log(fieldAttribute);
-                        SaintsPropertyDrawer fieldDrawerInstance = GetOrCreateSaintsDrawer(fieldAttributeWithIndex);
+                        SaintsPropertyDrawer fieldDrawerInstance = GetOrCreateSaintsDrawer(fieldAttributeWithIndex.Value);
                         // _fieldDrawer ??= (SaintsPropertyDrawer) Activator.CreateInstance(fieldDrawer, false);
                         // GUI.SetNextControlName(_fieldControlName);
                         fieldDrawerInstance.DrawField(fieldUseRectNoPost, property, useGuiContent,
-                            fieldAttributeWithIndex.SaintsAttribute, allAttributes, onGUIPayload, fieldInfo, parent);
+                            fieldAttributeWithIndex?.SaintsAttribute, allAttributes, onGUIPayload, fieldInfo, parent);
                         // _fieldDrawer.DrawField(fieldRect, property, newLabel, fieldAttribute);
 
                         // UsedAttributesTryAdd(fieldAttributeWithIndex, fieldDrawerInstance);
@@ -750,7 +747,7 @@ namespace SaintsField.Editor.Core
                 if (labelDrawerInfo != null)
                 {
                     labelDrawerInfo.labelDrawerInstance.DrawLabel(labelDrawerInfo.rect, property, bugFixCopyLabel,
-                        labelAttributeWithIndex.SaintsAttribute, fieldInfo, parent);
+                        labelAttributeWithIndex?.SaintsAttribute, fieldInfo, parent);
                 }
 
                 #endregion
@@ -759,7 +756,7 @@ namespace SaintsField.Editor.Core
 
                 // List<Rect> overlayTakenPositions = new List<Rect>();
                 bool hasLabelWidth = !string.IsNullOrEmpty(useGuiContent.text);
-                foreach (SaintsWithIndex eachAttributeWithIndex in allSaintsAttributes)
+                foreach (SaintsWithIndex eachAttributeWithIndex in attributesWithIndex)
                 {
                     SaintsPropertyDrawer drawerInstance = eachAttributeWithIndex.SaintsAttribute is null
                         ? this
@@ -791,7 +788,7 @@ namespace SaintsField.Editor.Core
                     groupedDrawers =
                         new Dictionary<string, List<(SaintsPropertyDrawer drawer, SaintsWithIndex saintsWithIndex)>>();
                 // Debug.Log($"allSaintsAttributes={allSaintsAttributes.Count}");
-                foreach (SaintsWithIndex eachAttributeWithIndex in allSaintsAttributes)
+                foreach (SaintsWithIndex eachAttributeWithIndex in attributesWithIndex)
                 {
                     SaintsPropertyDrawer drawerInstance = eachAttributeWithIndex.SaintsAttribute is null
                         ? this
@@ -869,7 +866,7 @@ namespace SaintsField.Editor.Core
                 // Debug.Log($"OnGui End: {SepTitleAttributeDrawer.drawCounter}");
             }
 
-            foreach (SaintsWithIndex saintsWithIndex in allSaintsAttributes)
+            foreach (SaintsWithIndex saintsWithIndex in attributesWithIndex)
             {
                 SaintsPropertyDrawer drawer = saintsWithIndex.SaintsAttribute is null
                     ? this
