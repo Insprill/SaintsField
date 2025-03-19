@@ -20,7 +20,7 @@ namespace SaintsField.Editor.Drawers.AnimatorDrawers.AnimatorParamDrawer
         }
 
         protected override void DrawField(Rect position, SerializedProperty property, GUIContent label,
-            ISaintsAttribute saintsAttribute, IReadOnlyList<PropertyAttribute> allAttributes, OnGUIPayload onGUIPayload,
+            ISaintsAttribute saintsAttribute, ISaintsAttribute[] allAttributes, OnGUIPayload onGUIPayload,
             FieldInfo info, object parent)
         {
             MetaInfo metaInfo = GetMetaInfo(property, saintsAttribute, info, parent);
@@ -159,7 +159,7 @@ namespace SaintsField.Editor.Drawers.AnimatorDrawers.AnimatorParamDrawer
             : ImGuiHelpBox.GetHeight(_error, EditorGUIUtility.currentViewWidth, MessageType.Error);
 
         protected override Rect DrawBelow(Rect position, SerializedProperty property, GUIContent label,
-            ISaintsAttribute saintsAttribute, int index, IReadOnlyList<PropertyAttribute> allAttributes,
+            ISaintsAttribute saintsAttribute, int index, ISaintsAttribute[] allAttributes,
             OnGUIPayload onGuiPayload, FieldInfo info, object parent) =>
             ImGuiHelpBox.Draw(position, _error, MessageType.Error);
 

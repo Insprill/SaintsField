@@ -24,7 +24,7 @@ namespace SaintsField.Editor.Drawers.SceneDrawer
         }
 
         protected override void DrawField(Rect position, SerializedProperty property, GUIContent label,
-            ISaintsAttribute saintsAttribute, IReadOnlyList<PropertyAttribute> allAttributes, OnGUIPayload onGUIPayload,
+            ISaintsAttribute saintsAttribute, ISaintsAttribute[] allAttributes, OnGUIPayload onGUIPayload,
             FieldInfo info, object parent)
         {
             string[] scenes = GetTrimedScenePath(((SceneAttribute)saintsAttribute).FullPath);
@@ -210,7 +210,7 @@ namespace SaintsField.Editor.Drawers.SceneDrawer
         }
 
         protected override Rect DrawBelow(Rect position, SerializedProperty property, GUIContent label,
-            ISaintsAttribute saintsAttribute, int index, IReadOnlyList<PropertyAttribute> allAttributes,
+            ISaintsAttribute saintsAttribute, int index, ISaintsAttribute[] allAttributes,
             OnGUIPayload onGuiPayload, FieldInfo info, object parent) =>
             _error == ""
                 ? position

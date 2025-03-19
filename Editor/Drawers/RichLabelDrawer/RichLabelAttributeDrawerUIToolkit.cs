@@ -67,7 +67,7 @@ namespace SaintsField.Editor.Drawers.RichLabelDrawer
         }
 
         protected override void OnAwakeUIToolkit(SerializedProperty property, ISaintsAttribute saintsAttribute,
-            int index, IReadOnlyList<PropertyAttribute> allAttributes, VisualElement container,
+            int index, ISaintsAttribute[] allAttributes, VisualElement container,
             Action<object> onValueChangedCallback, FieldInfo info, object parent)
         {
             VisualElement richContainer = container.Q<VisualElement>(NameRichLabelContainer(property));

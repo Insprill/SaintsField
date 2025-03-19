@@ -140,7 +140,7 @@ namespace SaintsField.Editor.Drawers
         }
 
         protected override void DrawField(Rect position, SerializedProperty property, GUIContent label,
-            ISaintsAttribute saintsAttribute, IReadOnlyList<PropertyAttribute> allAttributes, OnGUIPayload onGUIPayload,
+            ISaintsAttribute saintsAttribute, ISaintsAttribute[] allAttributes, OnGUIPayload onGUIPayload,
             FieldInfo info, object parent)
         {
             ImGuiEnsureResources(property);
@@ -279,7 +279,7 @@ namespace SaintsField.Editor.Drawers
 
         protected override VisualElement CreateFieldUIToolKit(SerializedProperty property,
             ISaintsAttribute saintsAttribute,
-            IReadOnlyList<PropertyAttribute> allAttributes,
+            ISaintsAttribute[] allAttributes,
             VisualElement container, FieldInfo info, object parent)
         {
             // VisualElement root = new VisualElement
@@ -405,7 +405,7 @@ namespace SaintsField.Editor.Drawers
         }
 
         protected override void OnAwakeUIToolkit(SerializedProperty property, ISaintsAttribute saintsAttribute,
-            int index, IReadOnlyList<PropertyAttribute> allAttributes, VisualElement container,
+            int index, ISaintsAttribute[] allAttributes, VisualElement container,
             Action<object> onValueChangedCallback, FieldInfo info, object parent)
         {
             UpdateStarUIToolkit(property.intValue, property, container);

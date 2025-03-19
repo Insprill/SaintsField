@@ -48,7 +48,7 @@ namespace SaintsField.Editor.Drawers.TypeDrawers
 
         protected override void DrawField(Rect position, SerializedProperty property, GUIContent label,
             ISaintsAttribute saintsAttribute,
-            IReadOnlyList<PropertyAttribute> allAttributes,
+            ISaintsAttribute[] allAttributes,
             OnGUIPayload onGUIPayload, FieldInfo info, object parent)
         {
             if(_imGuiPropRawName == "")
@@ -68,7 +68,7 @@ namespace SaintsField.Editor.Drawers.TypeDrawers
         private static string NamePropertyField(SerializedProperty property) => $"{property.propertyPath}_SaintsArray";
 
         protected override VisualElement CreateFieldUIToolKit(SerializedProperty property,
-            ISaintsAttribute saintsAttribute, IReadOnlyList<PropertyAttribute> allAttributes, VisualElement container,
+            ISaintsAttribute saintsAttribute, ISaintsAttribute[] allAttributes, VisualElement container,
             FieldInfo info, object parent)
         {
             (string error, string propName, int index) = GetSerName(property, (SaintsArrayAttribute) saintsAttribute, info, parent);

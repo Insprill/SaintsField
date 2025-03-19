@@ -43,7 +43,7 @@ namespace SaintsField.Editor.Drawers.ProgressBarDrawer
 
         protected override VisualElement CreateFieldUIToolKit(SerializedProperty property,
             ISaintsAttribute saintsAttribute,
-            IReadOnlyList<PropertyAttribute> allAttributes,
+            ISaintsAttribute[] allAttributes,
             VisualElement container, FieldInfo info, object parent)
         {
             ProgressBarAttribute progressBarAttribute = (ProgressBarAttribute)saintsAttribute;
@@ -123,7 +123,7 @@ namespace SaintsField.Editor.Drawers.ProgressBarDrawer
         }
 
         protected override void OnAwakeUIToolkit(SerializedProperty property, ISaintsAttribute saintsAttribute,
-            int index, IReadOnlyList<PropertyAttribute> allAttributes, VisualElement container,
+            int index, ISaintsAttribute[] allAttributes, VisualElement container,
             Action<object> onValueChangedCallback, FieldInfo info, object parent)
         {
             ProgressBar progressBar = container.Q<ProgressBar>(NameProgressBar(property));

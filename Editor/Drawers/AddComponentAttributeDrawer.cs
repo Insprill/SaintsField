@@ -23,7 +23,7 @@ namespace SaintsField.Editor.Drawers
             GUIContent label,
             ISaintsAttribute saintsAttribute,
             int index,
-            IReadOnlyList<PropertyAttribute> allAttributes,
+            ISaintsAttribute[] allAttributes,
             OnGUIPayload onGUIPayload, FieldInfo info, object parent)
         {
             return DoCheckComponent(property, saintsAttribute, info);

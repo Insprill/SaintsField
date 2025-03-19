@@ -457,7 +457,7 @@ namespace SaintsField.Editor.Drawers.TableDrawer
 
         protected override void DrawField(Rect position, SerializedProperty property, GUIContent label,
             ISaintsAttribute saintsAttribute,
-            IReadOnlyList<PropertyAttribute> allAttributes,
+            ISaintsAttribute[] allAttributes,
             OnGUIPayload onGUIPayload, FieldInfo info, object parent)
         {
             TableAttribute tableAttribute = (TableAttribute) saintsAttribute;
@@ -606,7 +606,7 @@ namespace SaintsField.Editor.Drawers.TableDrawer
 
         protected override Rect DrawBelow(Rect position, SerializedProperty property,
             GUIContent label, ISaintsAttribute saintsAttribute, int index,
-            IReadOnlyList<PropertyAttribute> allAttributes, OnGUIPayload onGuiPayload, FieldInfo info, object parent)
+            ISaintsAttribute[] allAttributes, OnGUIPayload onGuiPayload, FieldInfo info, object parent)
         {
             return ImGuiHelpBox.Draw(position, _error, MessageType.Error);
         }

@@ -344,15 +344,11 @@ namespace SaintsField.Editor.AutoRunner
                             ? (MemberInfo)info.fieldOrProp.FieldInfo
                             : info.fieldOrProp.PropertyInfo;
 
-                        PropertyAttribute[] allProperties = ReflectCache.GetCustomAttributes<PropertyAttribute>(memberInfo);
-
-                        PropertyAttribute[] saintsAttribute = allProperties
-                            .Where(each => each is ISaintsAttribute)
-                            .ToArray();
+                        ISaintsAttribute[] saintsAttribute = ReflectCache.GetCustomAttributes<ISaintsAttribute>(memberInfo);
 
                         List<AutoRunnerResult> autoRunnerResults = new List<AutoRunnerResult>();
                         bool skipThisField = false;
-                        foreach (PropertyAttribute saintsPropertyAttribute in saintsAttribute)
+                        foreach (ISaintsAttribute saintsPropertyAttribute in saintsAttribute)
                         {
                             if (skipThisField)
                             {
@@ -384,7 +380,7 @@ namespace SaintsField.Editor.AutoRunner
                                     // Debug.Log($"{property.propertyPath}/{autoRunnerDrawer}");
                                     SerializedProperty prop = property.Copy();
                                     AutoRunnerFixerResult autoRunnerResult =
-                                        autoRunnerDrawer.AutoRunFix(saintsPropertyAttribute, allProperties, prop, memberInfo, info.parent);
+                                        autoRunnerDrawer.AutoRunFix((PropertyAttribute)saintsPropertyAttribute, saintsAttribute, prop, memberInfo, info.parent);
                                     if(autoRunnerResult != null)
                                     {
                                         string fixerMessage =

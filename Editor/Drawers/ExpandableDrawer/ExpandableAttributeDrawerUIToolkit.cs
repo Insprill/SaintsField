@@ -64,7 +64,7 @@ namespace SaintsField.Editor.Drawers.ExpandableDrawer
         }
 
         protected override void OnAwakeUIToolkit(SerializedProperty property, ISaintsAttribute saintsAttribute, int index,
-            IReadOnlyList<PropertyAttribute> allAttributes, VisualElement container, Action<object> onValueChangedCallback, FieldInfo info, object parent)
+            ISaintsAttribute[] allAttributes, VisualElement container, Action<object> onValueChangedCallback, FieldInfo info, object parent)
         {
             Foldout foldOut = container.Q<Foldout>(NameFoldout(property));
 

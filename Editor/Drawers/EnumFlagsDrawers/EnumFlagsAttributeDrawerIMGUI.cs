@@ -127,7 +127,7 @@ namespace SaintsField.Editor.Drawers.EnumFlagsDrawers
         }
 
         protected override void DrawField(Rect position, SerializedProperty property, GUIContent label,
-            ISaintsAttribute saintsAttribute, IReadOnlyList<PropertyAttribute> allAttributes, OnGUIPayload onGUIPayload,
+            ISaintsAttribute saintsAttribute, ISaintsAttribute[] allAttributes, OnGUIPayload onGUIPayload,
             FieldInfo info, object parent)
         {
             ImGuiLoadResources();
@@ -358,7 +358,7 @@ namespace SaintsField.Editor.Drawers.EnumFlagsDrawers
         }
 
         protected override Rect DrawBelow(Rect position, SerializedProperty property, GUIContent label, ISaintsAttribute saintsAttribute,
-            int index, IReadOnlyList<PropertyAttribute> allAttributes, OnGUIPayload onGuiPayload, FieldInfo info, object parent)
+            int index, ISaintsAttribute[] allAttributes, OnGUIPayload onGuiPayload, FieldInfo info, object parent)
         {
             // return position;
             // Debug.Log(position.width);

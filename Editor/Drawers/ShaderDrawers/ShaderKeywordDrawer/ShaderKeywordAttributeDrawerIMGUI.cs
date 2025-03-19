@@ -48,7 +48,7 @@ namespace SaintsField.Editor.Drawers.ShaderDrawers.ShaderKeywordDrawer
 
         protected override void DrawField(Rect position, SerializedProperty property, GUIContent label,
             ISaintsAttribute saintsAttribute,
-            IReadOnlyList<PropertyAttribute> allAttributes,
+            ISaintsAttribute[] allAttributes,
             OnGUIPayload onGUIPayload, FieldInfo info, object parent)
         {
             if(!CachedIMGUI.TryGetValue(SerializedUtils.GetUniqueId(property), out ShaderKeywordInfoIMGUI infoIMGUI))
@@ -140,7 +140,7 @@ namespace SaintsField.Editor.Drawers.ShaderDrawers.ShaderKeywordDrawer
         }
 
         protected override Rect DrawBelow(Rect position, SerializedProperty property, GUIContent label, ISaintsAttribute saintsAttribute,
-            int index, IReadOnlyList<PropertyAttribute> allAttributes, OnGUIPayload onGuiPayload, FieldInfo info, object parent)
+            int index, ISaintsAttribute[] allAttributes, OnGUIPayload onGuiPayload, FieldInfo info, object parent)
         {
             string error = GetTypeMismatchError(property);
             if (error != "")

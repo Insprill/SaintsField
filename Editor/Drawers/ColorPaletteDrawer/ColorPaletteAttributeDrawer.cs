@@ -7,6 +7,7 @@ using SaintsField.Editor.ColorPalette;
 using SaintsField.Editor.Core;
 using SaintsField.Editor.Drawers.AdvancedDropdownDrawer;
 using SaintsField.Editor.Utils;
+using SaintsField.Interfaces;
 using UnityEditor;
 using UnityEngine;
 
@@ -185,7 +186,7 @@ namespace SaintsField.Editor.Drawers.ColorPaletteDrawer
         }
 
         public AutoRunnerFixerResult AutoRunFix(PropertyAttribute propertyAttribute,
-            IReadOnlyList<PropertyAttribute> allAttributes,
+            ISaintsAttribute[] allAttributes,
             SerializedProperty property, MemberInfo memberInfo, object parent)
         {
             // Debug.Log($"{property.propertyPath}/{property.propertyType}");

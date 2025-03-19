@@ -60,7 +60,7 @@ namespace SaintsField.Editor.Drawers.MinValueDrawer
 
         protected override bool DrawPostFieldImGui(Rect position, Rect fullRect, SerializedProperty property,
             GUIContent label,
-            ISaintsAttribute saintsAttribute, int index, IReadOnlyList<PropertyAttribute> allAttributes,
+            ISaintsAttribute saintsAttribute, int index, ISaintsAttribute[] allAttributes,
             OnGUIPayload onGUIPayload, FieldInfo info, object parent)
         {
             MinValueAttribute minValueAttribute = (MinValueAttribute)saintsAttribute;
@@ -141,7 +141,7 @@ namespace SaintsField.Editor.Drawers.MinValueDrawer
         }
 
         protected override Rect DrawBelow(Rect position, SerializedProperty property, GUIContent label,
-            ISaintsAttribute saintsAttribute, int index, IReadOnlyList<PropertyAttribute> allAttributes,
+            ISaintsAttribute saintsAttribute, int index, ISaintsAttribute[] allAttributes,
             OnGUIPayload onGuiPayload, FieldInfo info, object parent)
         {
             string error = EnsureKey((MinValueAttribute)saintsAttribute, property, index, info, parent).Error;

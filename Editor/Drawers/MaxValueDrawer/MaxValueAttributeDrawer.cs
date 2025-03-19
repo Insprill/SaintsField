@@ -3,6 +3,7 @@ using System.Reflection;
 using SaintsField.Editor.AutoRunner;
 using SaintsField.Editor.Core;
 using SaintsField.Editor.Utils;
+using SaintsField.Interfaces;
 using UnityEditor;
 
 namespace SaintsField.Editor.Drawers.MaxValueDrawer
@@ -20,7 +21,7 @@ namespace SaintsField.Editor.Drawers.MaxValueDrawer
                 : Util.GetOf(maxValueAttribute.ValueCallback, 0f, property, info, parentTarget);
         }
 
-        public AutoRunnerFixerResult AutoRunFix(UnityEngine.PropertyAttribute propertyAttribute, IReadOnlyList<UnityEngine.PropertyAttribute> allAttributes,
+        public AutoRunnerFixerResult AutoRunFix(UnityEngine.PropertyAttribute propertyAttribute, ISaintsAttribute[] allAttributes,
             SerializedProperty property, MemberInfo memberInfo, object parent)
         {
 

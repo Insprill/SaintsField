@@ -4,6 +4,7 @@ using System.Reflection;
 using SaintsField.Editor.AutoRunner;
 using SaintsField.Editor.Core;
 using SaintsField.Editor.Utils;
+using SaintsField.Interfaces;
 using UnityEditor;
 using UnityEngine;
 
@@ -38,7 +39,7 @@ namespace SaintsField.Editor.Drawers.ValidateInputDrawer
             }
         }
 
-        public AutoRunnerFixerResult AutoRunFix(PropertyAttribute propertyAttribute, IReadOnlyList<PropertyAttribute> allAttributes,
+        public AutoRunnerFixerResult AutoRunFix(PropertyAttribute propertyAttribute, ISaintsAttribute[] allAttributes,
             SerializedProperty property, MemberInfo memberInfo, object parent)
         {
             if (property.isArray)

@@ -184,7 +184,7 @@ namespace SaintsField.Editor.Drawers.ExpandableDrawer
         }
 
         protected override Rect DrawBelow(Rect position, SerializedProperty property, GUIContent label,
-            ISaintsAttribute saintsAttribute, int index, IReadOnlyList<PropertyAttribute> allAttributes,
+            ISaintsAttribute saintsAttribute, int index, ISaintsAttribute[] allAttributes,
             OnGUIPayload onGuiPayload, FieldInfo info, object parent)
         {
             // Debug.Log(position.height);

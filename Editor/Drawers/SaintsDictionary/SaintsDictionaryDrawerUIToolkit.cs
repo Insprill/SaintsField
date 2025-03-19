@@ -51,7 +51,7 @@ namespace SaintsField.Editor.Drawers.SaintsDictionary
         protected override bool UseCreateFieldUIToolKit => true;
 
         protected override VisualElement CreateFieldUIToolKit(SerializedProperty property, ISaintsAttribute saintsAttribute,
-            IReadOnlyList<PropertyAttribute> allAttributes, VisualElement container, FieldInfo info, object parent)
+            ISaintsAttribute[] allAttributes, VisualElement container, FieldInfo info, object parent)
         {
             SaintsDictionaryAttribute saintsDictionaryAttribute = saintsAttribute as SaintsDictionaryAttribute;
 
@@ -282,7 +282,7 @@ namespace SaintsField.Editor.Drawers.SaintsDictionary
         }
 
         protected override void OnAwakeUIToolkit(SerializedProperty property, ISaintsAttribute saintsAttribute, int index,
-            IReadOnlyList<PropertyAttribute> allAttributes, VisualElement container, Action<object> onValueChangedCallback, FieldInfo info, object parent)
+            ISaintsAttribute[] allAttributes, VisualElement container, Action<object> onValueChangedCallback, FieldInfo info, object parent)
         {
             Foldout foldout = container.Q<Foldout>(name: NameFoldout(property));
             foldout.RegisterValueChangedCallback(newValue => property.isExpanded = newValue.newValue);
@@ -825,7 +825,7 @@ namespace SaintsField.Editor.Drawers.SaintsDictionary
         protected override bool UseCreateFieldUIToolKit => true;
 
         protected override VisualElement CreateFieldUIToolKit(SerializedProperty property, ISaintsAttribute saintsAttribute,
-            IReadOnlyList<PropertyAttribute> allAttributes,
+            ISaintsAttribute[] allAttributes,
             VisualElement container, FieldInfo info, object parent)
         {
             // Action<object> onValueChangedCallback = null;

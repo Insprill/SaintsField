@@ -5,6 +5,7 @@ using System.Reflection;
 using SaintsField.Editor.AutoRunner;
 using SaintsField.Editor.Core;
 using SaintsField.Editor.Utils;
+using SaintsField.Interfaces;
 using UnityEditor;
 using UnityEditor.Animations;
 using UnityEngine;
@@ -313,7 +314,7 @@ namespace SaintsField.Editor.Drawers.AnimatorDrawers.AnimatorStateDrawer
 
         private static string FormatStateLabel(AnimatorStateChanged animatorStateInfo, string sep) => $"{animatorStateInfo.state.name}{(animatorStateInfo.animationClip == null ? "" : $" ({animatorStateInfo.animationClip.name})")}: {animatorStateInfo.layer.name}{(animatorStateInfo.subStateMachineNameChain.Count == 0 ? "" : $"{sep}{string.Join(sep, animatorStateInfo.subStateMachineNameChain)}")}";
 
-        public AutoRunnerFixerResult AutoRunFix(PropertyAttribute propertyAttribute, IReadOnlyList<PropertyAttribute> allAttributes,
+        public AutoRunnerFixerResult AutoRunFix(PropertyAttribute propertyAttribute, ISaintsAttribute[] allAttributes,
             SerializedProperty property, MemberInfo memberInfo, object parent)
         {
             AnimatorStateAttribute animatorStateAttribute = propertyAttribute as AnimatorStateAttribute;

@@ -130,7 +130,7 @@ namespace SaintsField.Editor.Drawers.ColorPaletteDrawer
         private Color _color;
 
         protected override void OnAwakeUIToolkit(SerializedProperty property, ISaintsAttribute saintsAttribute, int index,
-            IReadOnlyList<PropertyAttribute> allAttributes, VisualElement container, Action<object> onValueChangedCallback, FieldInfo info, object parent)
+            ISaintsAttribute[] allAttributes, VisualElement container, Action<object> onValueChangedCallback, FieldInfo info, object parent)
         {
             _color = property.colorValue;
 

@@ -175,7 +175,7 @@ namespace SaintsField.Editor.Drawers.XPathDrawers.GetByXPathDrawer
             GUIContent label,
             ISaintsAttribute saintsAttribute,
             int index,
-            IReadOnlyList<PropertyAttribute> allAttributes,
+            ISaintsAttribute[] allAttributes,
             OnGUIPayload onGUIPayload, FieldInfo info, object parent)
         {
             if (EditorApplication.isPlaying)
@@ -413,7 +413,7 @@ namespace SaintsField.Editor.Drawers.XPathDrawers.GetByXPathDrawer
         protected override Rect DrawBelow(Rect position, SerializedProperty property, GUIContent label,
             ISaintsAttribute saintsAttribute,
             int index,
-            IReadOnlyList<PropertyAttribute> allAttributes, OnGUIPayload onGuiPayload,
+            ISaintsAttribute[] allAttributes, OnGUIPayload onGuiPayload,
             FieldInfo info, object parent)
         {
             string content = GetBelowMessage(property, saintsAttribute);

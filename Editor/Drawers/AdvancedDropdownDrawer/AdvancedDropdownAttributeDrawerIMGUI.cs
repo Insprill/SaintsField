@@ -36,7 +36,7 @@ namespace SaintsField.Editor.Drawers.AdvancedDropdownDrawer
         private static readonly Dictionary<string, object> AsyncChangedCache = new Dictionary<string, object>();
 
         protected override void DrawField(Rect position, SerializedProperty property, GUIContent label,
-            ISaintsAttribute saintsAttribute, IReadOnlyList<PropertyAttribute> allAttributes, OnGUIPayload onGUIPayload,
+            ISaintsAttribute saintsAttribute, ISaintsAttribute[] allAttributes, OnGUIPayload onGUIPayload,
             FieldInfo info, object parent)
         {
             string key = GetKey(property);
@@ -188,7 +188,7 @@ namespace SaintsField.Editor.Drawers.AdvancedDropdownDrawer
             ISaintsAttribute saintsAttribute, int index, FieldInfo info, object parent) => _error == "" ? 0 : ImGuiHelpBox.GetHeight(_error, width, MessageType.Error);
 
         protected override Rect DrawBelow(Rect position, SerializedProperty property, GUIContent label,
-            ISaintsAttribute saintsAttribute, int index, IReadOnlyList<PropertyAttribute> allAttributes,
+            ISaintsAttribute saintsAttribute, int index, ISaintsAttribute[] allAttributes,
             OnGUIPayload onGuiPayload, FieldInfo info, object parent) => _error == "" ? position : ImGuiHelpBox.Draw(position, _error, MessageType.Error);
 
     }

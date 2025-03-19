@@ -39,7 +39,7 @@ namespace SaintsField.Editor.Drawers.FolderDrawers.ResourcesFolderDrawer
         protected override bool DrawPostFieldImGui(Rect position, Rect fullRect, SerializedProperty property,
             GUIContent label,
             ISaintsAttribute saintsAttribute,
-            int index, IReadOnlyList<PropertyAttribute> allAttributes, OnGUIPayload onGUIPayload, FieldInfo info,
+            int index, ISaintsAttribute[] allAttributes, OnGUIPayload onGUIPayload, FieldInfo info,
             object parent)
         {
             if (property.propertyType != SerializedPropertyType.String)
@@ -173,7 +173,7 @@ namespace SaintsField.Editor.Drawers.FolderDrawers.ResourcesFolderDrawer
         }
 
         protected override Rect DrawBelow(Rect position, SerializedProperty property, GUIContent label,
-            ISaintsAttribute saintsAttribute, int index, IReadOnlyList<PropertyAttribute> allAttributes,
+            ISaintsAttribute saintsAttribute, int index, ISaintsAttribute[] allAttributes,
             OnGUIPayload onGuiPayload, FieldInfo info, object parent)
         {
             if (property.propertyType != SerializedPropertyType.String)

@@ -18,7 +18,7 @@ namespace SaintsField.Editor.Drawers.DropdownDrawer
         private static string NameHelpBox(SerializedProperty property) => $"{property.propertyPath}__Dropdown_HelpBox";
 
         protected override VisualElement CreateFieldUIToolKit(SerializedProperty property,
-            ISaintsAttribute saintsAttribute, IReadOnlyList<PropertyAttribute> allAttributes, VisualElement container,
+            ISaintsAttribute saintsAttribute, ISaintsAttribute[] allAttributes, VisualElement container,
             FieldInfo info, object parent)
         {
             DropdownAttribute dropdownAttribute = (DropdownAttribute) saintsAttribute;
@@ -57,7 +57,7 @@ namespace SaintsField.Editor.Drawers.DropdownDrawer
         }
 
         protected override void OnAwakeUIToolkit(SerializedProperty property, ISaintsAttribute saintsAttribute,
-            int index, IReadOnlyList<PropertyAttribute> allAttributes, VisualElement container,
+            int index, ISaintsAttribute[] allAttributes, VisualElement container,
             Action<object> onValueChangedCallback, FieldInfo info, object parent)
         {
             DropdownAttribute dropdownAttribute = (DropdownAttribute)saintsAttribute;

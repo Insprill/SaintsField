@@ -26,7 +26,7 @@ namespace SaintsField.Editor.Drawers.TableDrawer
 
         protected override VisualElement CreateFieldUIToolKit(SerializedProperty property,
             ISaintsAttribute saintsAttribute,
-            IReadOnlyList<PropertyAttribute> allAttributes,
+            ISaintsAttribute[] allAttributes,
             VisualElement container, FieldInfo info, object parent)
         {
             int propertyIndex = SerializedUtils.PropertyPathIndex(property.propertyPath);
@@ -451,7 +451,7 @@ namespace SaintsField.Editor.Drawers.TableDrawer
         private int _max = -1;
 
         protected override void OnAwakeUIToolkit(SerializedProperty property, ISaintsAttribute saintsAttribute, int index,
-            IReadOnlyList<PropertyAttribute> allAttributes, VisualElement container, Action<object> onValueChangedCallback, FieldInfo info, object parent)
+            ISaintsAttribute[] allAttributes, VisualElement container, Action<object> onValueChangedCallback, FieldInfo info, object parent)
         {
             _arraySizeAttribute = allAttributes.OfType<ArraySizeAttribute>().FirstOrDefault();
             if (_arraySizeAttribute == null)
@@ -519,7 +519,7 @@ namespace SaintsField.Editor.Drawers.TableDrawer
 
         // this does not work because Unity internally update the style using inline
         // protected override void OnAwakeUIToolkit(SerializedProperty property, ISaintsAttribute saintsAttribute, int index,
-        //     IReadOnlyList<PropertyAttribute> allAttributes, VisualElement container, Action<object> onValueChangedCallback, FieldInfo info, object parent)
+        //     ISaintsAttribute[] allAttributes, VisualElement container, Action<object> onValueChangedCallback, FieldInfo info, object parent)
         // {
         //     bool isRenderedBySaintsEditor = UIToolkitUtils.FindParentClass(container, AbsRenderer.ClassSaintsFieldPlayaContainer).Any();
         //     // Debug.Log($"isRenderedBySaintsEditor={isRenderedBySaintsEditor}");
@@ -590,7 +590,7 @@ namespace SaintsField.Editor.Drawers.TableDrawer
     public partial class TableAttributeDrawer
     {
         protected override VisualElement CreateFieldUIToolKit(SerializedProperty property, ISaintsAttribute saintsAttribute,
-            IReadOnlyList<PropertyAttribute> allAttributes,
+            ISaintsAttribute[] allAttributes,
             VisualElement container, FieldInfo info, object parent)
         {
             int propertyIndex = SerializedUtils.PropertyPathIndex(property.propertyPath);

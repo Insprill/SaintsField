@@ -36,7 +36,7 @@ namespace SaintsField.Editor.Drawers.EnumFlagsDrawers
 
         protected override VisualElement CreateFieldUIToolKit(SerializedProperty property,
             ISaintsAttribute saintsAttribute,
-            IReadOnlyList<PropertyAttribute> allAttributes,
+            ISaintsAttribute[] allAttributes,
             VisualElement container, FieldInfo info, object parent)
         {
             LoadIcons();
@@ -298,7 +298,7 @@ namespace SaintsField.Editor.Drawers.EnumFlagsDrawers
         }
 
         protected override void OnAwakeUIToolkit(SerializedProperty property, ISaintsAttribute saintsAttribute, int index,
-            IReadOnlyList<PropertyAttribute> allAttributes, VisualElement container, Action<object> onValueChangedCallback, FieldInfo info, object parent)
+            ISaintsAttribute[] allAttributes, VisualElement container, Action<object> onValueChangedCallback, FieldInfo info, object parent)
         {
             EnumFlagsAttribute enumFlagsAttribute = (EnumFlagsAttribute) saintsAttribute;
             EnumFlagsMetaInfo metaInfo = EnumFlagsUtil.GetMetaInfo(property, info);

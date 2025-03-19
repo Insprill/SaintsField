@@ -38,7 +38,7 @@ namespace SaintsField.Editor.Drawers.CustomPicker.RequireTypeDrawer
 
         protected override bool DrawPostFieldImGui(Rect position, Rect fullRect, SerializedProperty property,
             GUIContent label,
-            ISaintsAttribute saintsAttribute, int index, IReadOnlyList<PropertyAttribute> allAttributes,
+            ISaintsAttribute saintsAttribute, int index, ISaintsAttribute[] allAttributes,
             OnGUIPayload onGUIPayload, FieldInfo info, object parent)
         {
             RequireTypeAttribute requireTypeAttribute = (RequireTypeAttribute)saintsAttribute;
@@ -251,7 +251,7 @@ namespace SaintsField.Editor.Drawers.CustomPicker.RequireTypeDrawer
             ISaintsAttribute saintsAttribute, int index, FieldInfo info, object parent) => _error == "" ? 0 : ImGuiHelpBox.GetHeight(_error, EditorGUIUtility.currentViewWidth, MessageType.Error);
 
         protected override Rect DrawBelow(Rect position, SerializedProperty property, GUIContent label,
-            ISaintsAttribute saintsAttribute, int index, IReadOnlyList<PropertyAttribute> allAttributes,
+            ISaintsAttribute saintsAttribute, int index, ISaintsAttribute[] allAttributes,
             OnGUIPayload onGuiPayload, FieldInfo info, object parent) => ImGuiHelpBox.Draw(position, _error, MessageType.Error);
         #endregion
     }

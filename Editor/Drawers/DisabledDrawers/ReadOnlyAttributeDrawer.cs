@@ -70,7 +70,7 @@ namespace SaintsField.Editor.Drawers.DisabledDrawers
         }
 
         protected override Rect DrawBelow(Rect position, SerializedProperty property, GUIContent label,
-            ISaintsAttribute saintsAttribute, int index, IReadOnlyList<PropertyAttribute> allAttributes,
+            ISaintsAttribute saintsAttribute, int index, ISaintsAttribute[] allAttributes,
             OnGUIPayload onGuiPayload, FieldInfo info, object parent)
         {
             // EditorGUI.EndDisabledGroup();

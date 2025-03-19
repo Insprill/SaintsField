@@ -147,7 +147,7 @@ namespace SaintsField.Editor.Drawers.AnimatorDrawers.AnimatorParamDrawer
             EditorApplication.ExecuteMenuItem("Window/Animation/Animator");
         }
 
-        public AutoRunnerFixerResult AutoRunFix(PropertyAttribute propertyAttribute, IReadOnlyList<PropertyAttribute> allAttributes,
+        public AutoRunnerFixerResult AutoRunFix(PropertyAttribute propertyAttribute, ISaintsAttribute[] allAttributes,
             SerializedProperty property, MemberInfo memberInfo, object parent)
         {
             MetaInfo metaInfo = GetMetaInfo(property, (AnimatorParamAttribute)propertyAttribute, memberInfo, parent);

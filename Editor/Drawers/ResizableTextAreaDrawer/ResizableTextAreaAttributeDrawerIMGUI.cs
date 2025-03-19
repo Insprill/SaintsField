@@ -40,7 +40,7 @@ namespace SaintsField.Editor.Drawers.ResizableTextAreaDrawer
         }
 
         protected override void DrawField(Rect position, SerializedProperty property, GUIContent label,
-            ISaintsAttribute saintsAttribute, IReadOnlyList<PropertyAttribute> allAttributes, OnGUIPayload onGUIPayload,
+            ISaintsAttribute saintsAttribute, ISaintsAttribute[] allAttributes, OnGUIPayload onGUIPayload,
             FieldInfo info, object parent)
         {
             // EditorGUI.DrawRect(position, Color.blue);
@@ -110,7 +110,7 @@ namespace SaintsField.Editor.Drawers.ResizableTextAreaDrawer
             _error == "" ? 0 : ImGuiHelpBox.GetHeight(_error, width, MessageType.Error);
 
         protected override Rect DrawBelow(Rect position, SerializedProperty property, GUIContent label,
-            ISaintsAttribute saintsAttribute, int index, IReadOnlyList<PropertyAttribute> allAttributes,
+            ISaintsAttribute saintsAttribute, int index, ISaintsAttribute[] allAttributes,
             OnGUIPayload onGuiPayload, FieldInfo info, object parent) =>
             _error == "" ? position : ImGuiHelpBox.Draw(position, _error, MessageType.Error);
 

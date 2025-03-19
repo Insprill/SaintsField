@@ -113,7 +113,7 @@ namespace SaintsField.Editor.Drawers.PropRangeDrawer
             return AdaptAttributeDrawer.GetDoubleValuePost(value);
         }
 
-        public AutoRunnerFixerResult AutoRunFix(PropertyAttribute propertyAttribute, IReadOnlyList<PropertyAttribute> allAttributes,
+        public AutoRunnerFixerResult AutoRunFix(PropertyAttribute propertyAttribute, ISaintsAttribute[] allAttributes,
             SerializedProperty property, MemberInfo memberInfo, object parent)
         {
             MetaInfo metaInfo = GetMetaInfo(property, (PropRangeAttribute)propertyAttribute, memberInfo, parent);

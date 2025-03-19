@@ -24,7 +24,7 @@ namespace SaintsField.Editor.Drawers.ProgressBarDrawer
 
         protected override void DrawField(Rect position, SerializedProperty property, GUIContent label,
             ISaintsAttribute saintsAttribute,
-            IReadOnlyList<PropertyAttribute> allAttributes,
+            ISaintsAttribute[] allAttributes,
             OnGUIPayload onGUIPayload,
             FieldInfo info,
             object parent)

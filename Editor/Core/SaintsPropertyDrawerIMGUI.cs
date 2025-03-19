@@ -913,7 +913,7 @@ namespace SaintsField.Editor.Core
 
         protected virtual bool DrawPostFieldImGui(Rect position, Rect fullRect, SerializedProperty property,
             GUIContent label,
-            ISaintsAttribute saintsAttribute, int index, IReadOnlyList<PropertyAttribute> allAttributes,
+            ISaintsAttribute saintsAttribute, int index, ISaintsAttribute[] allAttributes,
             OnGUIPayload onGUIPayload, FieldInfo info, object parent)
         {
             return false;
@@ -933,7 +933,7 @@ namespace SaintsField.Editor.Core
         }
 
         protected virtual void DrawField(Rect position, SerializedProperty property, GUIContent label,
-            ISaintsAttribute saintsAttribute, IReadOnlyList<PropertyAttribute> allAttributes, OnGUIPayload onGUIPayload,
+            ISaintsAttribute saintsAttribute, ISaintsAttribute[] allAttributes, OnGUIPayload onGUIPayload,
             FieldInfo info, object parent)
         {
         }
@@ -955,7 +955,7 @@ namespace SaintsField.Editor.Core
 
         protected virtual Rect DrawBelow(Rect position, SerializedProperty property,
             GUIContent label, ISaintsAttribute saintsAttribute, int index,
-            IReadOnlyList<PropertyAttribute> allAttributes, OnGUIPayload onGuiPayload, FieldInfo info, object parent)
+            ISaintsAttribute[] allAttributes, OnGUIPayload onGuiPayload, FieldInfo info, object parent)
         {
             return position;
         }

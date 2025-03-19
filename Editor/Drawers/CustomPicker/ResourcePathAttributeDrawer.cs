@@ -155,7 +155,7 @@ namespace SaintsField.Editor.Drawers.CustomPicker
         }
 
         protected override void DrawField(Rect position, SerializedProperty property, GUIContent label,
-            ISaintsAttribute saintsAttribute, IReadOnlyList<PropertyAttribute> allAttributes, OnGUIPayload onGUIPayload,
+            ISaintsAttribute saintsAttribute, ISaintsAttribute[] allAttributes, OnGUIPayload onGUIPayload,
             FieldInfo info, object parent)
         {
             if (property.propertyType != SerializedPropertyType.String)
@@ -327,7 +327,7 @@ namespace SaintsField.Editor.Drawers.CustomPicker
 
         protected override VisualElement CreateFieldUIToolKit(SerializedProperty property,
             ISaintsAttribute saintsAttribute,
-            IReadOnlyList<PropertyAttribute> allAttributes,
+            ISaintsAttribute[] allAttributes,
             VisualElement container, FieldInfo info, object parent)
         {
             ResourcePathAttribute fieldTypeAttribute = (ResourcePathAttribute)saintsAttribute;
@@ -363,7 +363,7 @@ namespace SaintsField.Editor.Drawers.CustomPicker
         }
 
         protected override void OnAwakeUIToolkit(SerializedProperty property, ISaintsAttribute saintsAttribute,
-            int index, IReadOnlyList<PropertyAttribute> allAttributes, VisualElement container,
+            int index, ISaintsAttribute[] allAttributes, VisualElement container,
             Action<object> onValueChangedCallback, FieldInfo info, object parent)
         {
             ResourcePathAttribute resourcePathAttribute = (ResourcePathAttribute)saintsAttribute;

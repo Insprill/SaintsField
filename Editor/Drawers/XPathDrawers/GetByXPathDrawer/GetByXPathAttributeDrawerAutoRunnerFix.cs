@@ -5,6 +5,7 @@ using System.Reflection;
 using SaintsField.Editor.AutoRunner;
 using SaintsField.Editor.Linq;
 using SaintsField.Editor.Utils;
+using SaintsField.Interfaces;
 using SaintsField.Utils;
 using UnityEditor;
 using UnityEngine;
@@ -15,7 +16,7 @@ namespace SaintsField.Editor.Drawers.XPathDrawers.GetByXPathDrawer
     {
         // this will give array and array items; it needs to be processed separately
         public AutoRunnerFixerResult AutoRunFix(PropertyAttribute propertyAttribute,
-            IReadOnlyList<PropertyAttribute> allAttributes,
+            ISaintsAttribute[] allAttributes,
             SerializedProperty property, MemberInfo memberInfo, object parent)
         {
             // ReSharper disable once UseNegatedPatternInIsExpression

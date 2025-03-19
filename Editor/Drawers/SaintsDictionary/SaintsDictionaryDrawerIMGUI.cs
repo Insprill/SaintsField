@@ -429,7 +429,7 @@ namespace SaintsField.Editor.Drawers.SaintsDictionary
         private static GUIStyle _iconButtonStyle;
 
         protected override void DrawField(Rect position, SerializedProperty property, GUIContent label, ISaintsAttribute saintsAttribute,
-            IReadOnlyList<PropertyAttribute> allAttributes, OnGUIPayload onGUIPayload, FieldInfo info, object parent)
+            ISaintsAttribute[] allAttributes, OnGUIPayload onGUIPayload, FieldInfo info, object parent)
         {
             SaintsDictionaryAttribute saintsDictionaryAttribute = saintsAttribute as SaintsDictionaryAttribute;
             bool searchable = saintsDictionaryAttribute?.Searchable ?? true;

@@ -394,7 +394,7 @@ namespace SaintsField.Editor.Core
 
         // private static readonly List<Func<SerializedProperty, FieldInfo,IReadOnlyList<PropertyAttribute>, (ISaintsAttribute fakeAttribute, Type drawerType)>> _saintsPropertyInfoInjects = new List<Func<SerializedProperty, FieldInfo, IReadOnlyList<PropertyAttribute>, (ISaintsAttribute fakeAttribute, Type drawerType)>>();
 
-        // private static SaintsPropertyInfo CheckSaintsPropertyInfoInject(SerializedProperty property, IReadOnlyList<PropertyAttribute> allAttributes, FieldInfo info, int length)
+        // private static SaintsPropertyInfo CheckSaintsPropertyInfoInject(SerializedProperty property, ISaintsAttribute[] allAttributes, FieldInfo info, int length)
         // {
         //     foreach (Func<SerializedProperty, FieldInfo,IReadOnlyList<PropertyAttribute>, (ISaintsAttribute fakeAttribute, Type drawerType)> func in _saintsPropertyInfoInjects)
         //     {
@@ -418,7 +418,7 @@ namespace SaintsField.Editor.Core
         //     _saintsPropertyInfoInjects.Add(func);
         // }
 
-        private static VisualElement UnityFallbackUIToolkit(FieldInfo info, SerializedProperty property, VisualElement containerElement, IReadOnlyList<PropertyAttribute> allAttributes, IReadOnlyList<SaintsPropertyInfo> saintsPropertyDrawers, object parent)
+        private static VisualElement UnityFallbackUIToolkit(FieldInfo info, SerializedProperty property, VisualElement containerElement, ISaintsAttribute[] allAttributes, IReadOnlyList<SaintsPropertyInfo> saintsPropertyDrawers, object parent)
         {
             // check if any property has drawer. If so, just use PropertyField
             // if not, check if it has custom drawer. if it exists, then try use that custom drawer
@@ -455,7 +455,7 @@ namespace SaintsField.Editor.Core
             return element ?? PropertyFieldFallbackUIToolkit(property);
         }
 
-        private static VisualElement DrawUsingDrawerInstance(Type drawerType, PropertyDrawer drawerInstance, SerializedProperty property, FieldInfo info, IReadOnlyList<PropertyAttribute> allAttributes, IReadOnlyList<SaintsPropertyInfo> saintsPropertyDrawers, VisualElement containerElement, object parent)
+        private static VisualElement DrawUsingDrawerInstance(Type drawerType, PropertyDrawer drawerInstance, SerializedProperty property, FieldInfo info, ISaintsAttribute[] allAttributes, IReadOnlyList<SaintsPropertyInfo> saintsPropertyDrawers, VisualElement containerElement, object parent)
         {
             Debug.Assert(drawerType != null);
             if (drawerInstance == null)
@@ -558,7 +558,7 @@ namespace SaintsField.Editor.Core
 
         private void OnAwakeUiToolKitInternal(SerializedProperty property, VisualElement containerElement,
             object parent, IReadOnlyList<SaintsPropertyInfo> saintsPropertyDrawers,
-            IReadOnlyList<PropertyAttribute> allAttributes)
+            ISaintsAttribute[] allAttributes)
         {
 #if SAINTSFIELD_DEBUG && SAINTSFIELD_DEBUG_DRAW_PROCESS_CORE
             Debug.Log($"On Awake {property.propertyPath}: {string.Join(",", saintsPropertyDrawers.Select(each => each.Attribute.GetType().Name))}");
@@ -913,7 +913,7 @@ namespace SaintsField.Editor.Core
         }
 
         private void OnAwakeReady(SerializedProperty property, VisualElement containerElement,
-            object parent,  Action<object> onValueChangedCallback, IReadOnlyList<SaintsPropertyInfo> saintsPropertyDrawers, IReadOnlyList<PropertyAttribute> allAttributes)
+            object parent,  Action<object> onValueChangedCallback, IReadOnlyList<SaintsPropertyInfo> saintsPropertyDrawers, ISaintsAttribute[] allAttributes)
         {
 
             // Debug.Log("OnAwakeReady");
@@ -1097,7 +1097,7 @@ namespace SaintsField.Editor.Core
         }
 
         protected virtual VisualElement CreateFieldUIToolKit(SerializedProperty property,
-            ISaintsAttribute saintsAttribute, IReadOnlyList<PropertyAttribute> allAttributes, VisualElement container,
+            ISaintsAttribute saintsAttribute, ISaintsAttribute[] allAttributes, VisualElement container,
             FieldInfo info, object parent)
         {
             throw new NotImplementedException();
@@ -1122,7 +1122,7 @@ namespace SaintsField.Editor.Core
 
         protected virtual void OnAwakeUIToolkit(SerializedProperty property, ISaintsAttribute saintsAttribute,
             int index,
-            IReadOnlyList<PropertyAttribute> allAttributes,
+            ISaintsAttribute[] allAttributes,
             VisualElement container, Action<object> onValueChangedCallback, FieldInfo info, object parent)
         {
         }

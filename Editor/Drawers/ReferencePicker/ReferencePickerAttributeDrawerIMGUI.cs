@@ -18,7 +18,7 @@ namespace SaintsField.Editor.Drawers.ReferencePicker
             GUIContent label,
             ISaintsAttribute saintsAttribute,
             int index,
-            IReadOnlyList<PropertyAttribute> allAttributes,
+            ISaintsAttribute[] allAttributes,
             OnGUIPayload onGUIPayload, FieldInfo info, object parent)
         {
             object managedReferenceValue = property.managedReferenceValue;
